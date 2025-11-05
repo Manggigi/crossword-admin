@@ -1,5 +1,9 @@
-import { FormEvent, useState } from "react";
+import type { FormEvent } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
 
 export default function AdminPuzzleNew() {
   const navigate = useNavigate();
@@ -18,8 +22,8 @@ export default function AdminPuzzleNew() {
       body: JSON.stringify({ title, date, description, difficulty }),
     });
     if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      setError(data.error || "Failed to create");
+      const data = (await res.json().catch(() => ({}))) as any;
+      setError((data as any).error || "Failed to create");
       return;
     }
     navigate("/admin/daily/puzzles");
@@ -27,33 +31,43 @@ export default function AdminPuzzleNew() {
 
   return (
     <div>
-      <h2>New Puzzle</h2>
-      <form
-        onSubmit={onSubmit}
-        style={{ marginTop: 12, display: "grid", gap: 8 }}
-      >
-        <input
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <input
-          placeholder="Date (YYYY-MM-DD)"
-          value={date}
-          onChange={(e) => setDate(e.target.value)}
-        />
-        <input
-          placeholder="Difficulty"
-          value={difficulty}
-          onChange={(e) => setDifficulty(e.target.value)}
-        />
-        <textarea
-          placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-        />
-        {error ? <p style={{ color: "crimson" }}>{error}</p> : null}
-        <button type="submit">Create</button>
+      <h2 className="text-lg font-semibold">New Puzzle</h2>
+      <form onSubmit={onSubmit} className="mt-3 grid gap-2">
+        <div className="space-y-1">
+          <Label>Title</Label>
+          <Input
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>Date</Label>
+          <Input
+            placeholder="YYYY-MM-DD"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>Difficulty</Label>
+          <Input
+            placeholder="eg: easy"
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value)}
+          />
+        </div>
+        <div className="space-y-1">
+          <Label>Description</Label>
+          <textarea
+            className="min-h-24 w-full rounded-md border border-gray-300 p-2 text-sm dark:border-gray-800"
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
+        {error ? <p className="text-sm text-red-600">{error}</p> : null}
+        <Button type="submit">Create</Button>
       </form>
     </div>
   );
