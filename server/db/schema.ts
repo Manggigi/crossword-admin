@@ -44,6 +44,31 @@ export const puzzles = sqliteTable("puzzles", {
   updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });
 
+export const gameSessions = sqliteTable("game_sessions", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  puzzleId: integer("puzzle_id").notNull(),
+  playerId: integer("player_id"),
+  status: text("status").notNull().default("active"),
+  data: text("data"),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
+});
+
+export const sessionHints = sqliteTable("session_hints", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  gameSessionId: integer("game_session_id").notNull(),
+  payload: text("payload").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+});
+
+export const shares = sqliteTable("shares", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  puzzleId: integer("puzzle_id").notNull(),
+  playerId: integer("player_id"),
+  channel: text("channel").notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+});
+
 
 
 

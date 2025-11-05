@@ -59,6 +59,7 @@
     "dev": "react-router dev",
     "preview": "npm run build && vite preview",
     "typecheck": "npm run cf-typegen && react-router typegen && tsc -b",
-    "test:e2e": "node scripts/e2e.mjs"
+    "test:e2e": "node scripts/e2e.mjs",
+    "test:e2e:v1": "node scripts/e2e_v1.mjs"
   }
 }

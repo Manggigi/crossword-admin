@@ -9,6 +9,9 @@ import puzzles from "../server/routes/puzzles";
 import "../server/routes/groups";
 import "../server/routes/collections";
 import "../server/routes/puzzlesAdmin";
+import { Hono } from "hono";
+import { corsForPublicApi } from "../server/middleware/cors";
+import v1 from "../server/routes/v1/index";
 
 const app = new Hono();
 
@@ -18,6 +21,12 @@ app.route("/api/players/auth", playerAuth);
 app.route("/", openapi);
 app.route("/api-docs", docs);
 app.route("/api/puzzles", puzzles);
+
+// Public API v1: CORS middleware + versioned router
+const apiV1 = new Hono();
+apiV1.use("*", corsForPublicApi());
+apiV1.route("/", v1);
+app.route("/api/v1", apiV1);
 
 app.get("*", (c) => {
   const requestHandler = createRequestHandler(
