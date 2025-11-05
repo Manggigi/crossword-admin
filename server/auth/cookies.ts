@@ -4,7 +4,7 @@ import { setCookie } from "hono/cookie";
 export function setAdminSessionCookie(
   c: Context,
   token: string,
-  maxAgeSeconds: number = 60 * 60,
+  maxAgeSeconds: number = 60 * 60
 ) {
   setCookie(c, "admin_session", token, {
     httpOnly: true,
@@ -24,12 +24,3 @@ export function clearAdminSessionCookie(c: Context) {
     maxAge: 0,
   });
 }
-
-
-
-
-
-
-
-
-
