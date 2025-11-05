@@ -7,7 +7,9 @@
   "compatibility_date": "2025-10-08",
   "main": "./workers/app.ts",
   "vars": {
-    "VALUE_FROM_CLOUDFLARE": "Hello from Hono/CF"
+    "VALUE_FROM_CLOUDFLARE": "Hello from Hono/CF",
+    // JWT secret for signing tokens (use `wrangler secret put JWT_SECRET` in real envs)
+    "JWT_SECRET": "dev-secret-change-me"
   },
   "observability": {
     "enabled": true
@@ -42,5 +44,18 @@
    * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
    */
   // "services": [{ "binding": "MY_SERVICE", "service": "my-service" }]
+  ,
+  /**
+   * D1 Database binding
+   * Update `database_id` after creating the DB: `wrangler d1 create crossword_admin_dev`
+   */
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "crossword_admin_dev",
+      "database_id": "D1_DB_ID_PLACEHOLDER",
+      "migrations_dir": "drizzle"
+    }
+  ],
   "upload_source_maps": true
 }

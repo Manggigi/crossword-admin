@@ -1,0 +1,47 @@
+-- D1 initial schema
+PRAGMA foreign_keys = ON;
+
+CREATE TABLE IF NOT EXISTS admin_users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT NOT NULL UNIQUE,
+  password_hash TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'admin',
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS player_users (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  email TEXT,
+  password_hash TEXT,
+  is_guest INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS groups (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS collections (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  group_id INTEGER,
+  name TEXT NOT NULL,
+  slug TEXT NOT NULL UNIQUE,
+  FOREIGN KEY (group_id) REFERENCES groups(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS puzzles (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  collection_id INTEGER,
+  title TEXT NOT NULL,
+  date TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'draft',
+  icon_url TEXT,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL,
+  FOREIGN KEY (collection_id) REFERENCES collections(id) ON DELETE SET NULL
+);
+
+

@@ -4,6 +4,10 @@
 declare namespace Cloudflare {
 	interface Env {
 		VALUE_FROM_CLOUDFLARE: "Hello from Hono/CF";
+		// D1 Database binding
+		DB: D1Database;
+		// JWT secret for signing tokens
+		JWT_SECRET: string;
 	}
 }
 interface Env extends Cloudflare.Env {}
