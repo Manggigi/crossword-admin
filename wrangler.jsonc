@@ -50,9 +50,9 @@
    */
   "d1_databases": [
     {
-      "binding": "DB",
+      "binding": "crossword_admin_dev",
       "database_name": "crossword_admin_dev",
-      "database_id": "D1_DB_ID_PLACEHOLDER",
+      "database_id": "0bfc995b-183a-4776-8556-efe4be92e94b",
       "migrations_dir": "drizzle"
     }
   ],

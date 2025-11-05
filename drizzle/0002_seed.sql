@@ -13,3 +13,9 @@ INSERT INTO puzzles (collection_id, title, date, status, icon_url, created_at, u
 
 
 
+
+
+
+
+
+
