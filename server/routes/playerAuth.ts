@@ -4,6 +4,7 @@ import { getDb } from "../db/client";
 import { playerUsers } from "../db/schema";
 import { createJwt, verifyJwt } from "../auth/jwt";
 import { eq } from "drizzle-orm";
+import { hashPassword, verifyPassword } from "../auth/password";
 
 const router = new Hono<{ Bindings: Env }>();
 
@@ -20,15 +21,17 @@ router.post("/sign_up", async (c) => {
   const { email, password } = parsed.data;
   const db = getDb(c.env);
   // Check existing
-  const existing = await db.select().from(playerUsers).where(eq(playerUsers.email, email)).limit(1);
+  const existing = await db
+    .select()
+    .from(playerUsers)
+    .where(eq(playerUsers.email, email))
+    .limit(1);
   if (existing[0]) return c.json({ error: "Email already taken" }, 409);
-  const now = Date.now();
-  await db.insert(playerUsers).values({
-    email,
-    passwordHash: password, // DEV only; replace with proper hashing
-    isGuest: false,
-    createdAt: now,
-  });
+  const now = new Date();
+  const hash = await hashPassword(password);
+  await db
+    .insert(playerUsers)
+    .values({ email, passwordHash: hash, isGuest: false, createdAt: now });
   return c.json({ ok: true });
 });
 
@@ -38,24 +41,47 @@ router.post("/sign_in", async (c) => {
   if (!parsed.success) return c.json({ error: "Invalid payload" }, 400);
   const { email, password } = parsed.data;
   const db = getDb(c.env);
-  const rows = await db.select().from(playerUsers).where(eq(playerUsers.email, email)).limit(1);
+  const rows = await db
+    .select()
+    .from(playerUsers)
+    .where(eq(playerUsers.email, email))
+    .limit(1);
   const user = rows[0];
   if (!user) return c.json({ error: "Invalid credentials" }, 401);
-  if (user.passwordHash !== password) return c.json({ error: "Invalid credentials" }, 401);
-  const token = await createJwt({ sub: String(user.id), role: "player" }, c.env, 60 * 60);
-  return c.json({ access_token: token, token_type: "Bearer", expires_in: 3600 });
+  const ok = user.passwordHash
+    ? await verifyPassword(password, user.passwordHash)
+    : false;
+  if (!ok) return c.json({ error: "Invalid credentials" }, 401);
+  const token = await createJwt(
+    { sub: String(user.id), role: "player" },
+    c.env,
+    60 * 60
+  );
+  return c.json({
+    access_token: token,
+    token_type: "Bearer",
+    expires_in: 3600,
+  });
 });
 
 router.post("/guest", async (c) => {
   const db = getDb(c.env);
-  const now = Date.now();
+  const now = new Date();
   const result = await db
     .insert(playerUsers)
     .values({ email: null, passwordHash: null, isGuest: true, createdAt: now })
     .returning({ id: playerUsers.id });
   const id = result[0]?.id ?? 0;
-  const token = await createJwt({ sub: String(id), role: "player" }, c.env, 60 * 60);
-  return c.json({ access_token: token, token_type: "Bearer", expires_in: 3600 });
+  const token = await createJwt(
+    { sub: String(id), role: "player" },
+    c.env,
+    60 * 60
+  );
+  return c.json({
+    access_token: token,
+    token_type: "Bearer",
+    expires_in: 3600,
+  });
 });
 
 router.get("/me", async (c) => {
@@ -67,7 +93,11 @@ router.get("/me", async (c) => {
     if (!payload.sub) return c.json({ user: null }, 200);
     const db = getDb(c.env);
     const rows = await db
-      .select({ id: playerUsers.id, email: playerUsers.email, isGuest: playerUsers.isGuest })
+      .select({
+        id: playerUsers.id,
+        email: playerUsers.email,
+        isGuest: playerUsers.isGuest,
+      })
       .from(playerUsers)
       .where(eq(playerUsers.id, Number(payload.sub)))
       .limit(1);
@@ -78,12 +108,3 @@ router.get("/me", async (c) => {
 });
 
 export default router;
-
-
-
-
-
-
-
-
-

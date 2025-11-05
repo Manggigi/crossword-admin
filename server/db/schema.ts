@@ -5,8 +5,8 @@ export const adminUsers = sqliteTable("admin_users", {
   email: text("email").notNull().unique(),
   passwordHash: text("password_hash").notNull(),
   role: text("role").notNull().default("admin"),
-  createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp_ms" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });
 
 export const playerUsers = sqliteTable("player_users", {
@@ -14,7 +14,7 @@ export const playerUsers = sqliteTable("player_users", {
   email: text("email"),
   passwordHash: text("password_hash"),
   isGuest: integer("is_guest", { mode: "boolean" }).notNull().default(false),
-  createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
 });
 
 export const groups = sqliteTable("groups", {
@@ -37,8 +37,11 @@ export const puzzles = sqliteTable("puzzles", {
   date: text("date").notNull(),
   status: text("status").notNull().default("draft"),
   iconUrl: text("icon_url"),
-  createdAt: integer("created_at", { mode: "timestamp_ms" }).notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp_ms" }).notNull(),
+  description: text("description"),
+  difficulty: text("difficulty"),
+  publishedAt: integer("published_at", { mode: "timestamp" }),
+  createdAt: integer("created_at", { mode: "timestamp" }).notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp" }).notNull(),
 });
 
 

@@ -10,7 +10,8 @@ export async function createJwt(
   env: Env,
   expiresInSeconds: number = 60 * 60,
 ) {
-  const secret = new TextEncoder().encode(env.JWT_SECRET);
+  const secretString = (env as any).JWT_SECRET || "dev-secret-change-me";
+  const secret = new TextEncoder().encode(secretString);
   const now = Math.floor(Date.now() / 1000);
   return await new SignJWT({ ...claims, iat: now })
     .setProtectedHeader({ alg: "HS256" })
@@ -20,7 +21,8 @@ export async function createJwt(
 }
 
 export async function verifyJwt<T = unknown>(token: string, env: Env): Promise<T> {
-  const secret = new TextEncoder().encode(env.JWT_SECRET);
+  const secretString = (env as any).JWT_SECRET || "dev-secret-change-me";
+  const secret = new TextEncoder().encode(secretString);
   const { payload } = await jwtVerify(token, secret, {
     algorithms: ["HS256"],
   });
