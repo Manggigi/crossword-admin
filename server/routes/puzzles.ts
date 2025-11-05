@@ -9,7 +9,13 @@ router.get("/daily", async (c) => {
   const limit = Number(new URL(c.req.url).searchParams.get("limit") ?? "20");
   const db = getDb(c.env);
   const rows = await db
-    .select({ id: puzzles.id, title: puzzles.title, date: puzzles.date, status: puzzles.status, iconUrl: puzzles.iconUrl })
+    .select({
+      id: puzzles.id,
+      title: puzzles.title,
+      date: puzzles.date,
+      status: puzzles.status,
+      iconUrl: puzzles.iconUrl,
+    })
     .from(puzzles)
     .orderBy(desc(puzzles.date))
     .limit(Math.min(Math.max(limit, 1), 100));
@@ -21,7 +27,13 @@ router.get(":id", async (c) => {
   if (!Number.isFinite(id)) return c.json({ error: "Invalid id" }, 400);
   const db = getDb(c.env);
   const rows = await db
-    .select({ id: puzzles.id, title: puzzles.title, date: puzzles.date, status: puzzles.status, iconUrl: puzzles.iconUrl })
+    .select({
+      id: puzzles.id,
+      title: puzzles.title,
+      date: puzzles.date,
+      status: puzzles.status,
+      iconUrl: puzzles.iconUrl,
+    })
     .from(puzzles)
     .where(eq(puzzles.id, id))
     .limit(1);
@@ -31,12 +43,3 @@ router.get(":id", async (c) => {
 });
 
 export default router;
-
-
-
-
-
-
-
-
-

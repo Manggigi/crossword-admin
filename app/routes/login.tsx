@@ -62,16 +62,9 @@ export default function LoginPage() {
           {loading ? "Signing in..." : "Sign In"}
         </button>
       </form>
-      <p style={{ marginTop: 8, color: "#666" }}>Use admin@example.com / admin123</p>
+      <p style={{ marginTop: 8, color: "#666" }}>
+        Use admin@example.com / admin123
+      </p>
     </div>
   );
 }
-
-
-
-
-
-
-
-
-

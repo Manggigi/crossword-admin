@@ -5,6 +5,10 @@ import playerAuth from "../server/routes/playerAuth";
 import { openapi } from "../server/openapi";
 import docs from "../server/routes/docs";
 import puzzles from "../server/routes/puzzles";
+// Import OpenAPI-registered routes so they self-register on load
+import "../server/routes/groups";
+import "../server/routes/collections";
+import "../server/routes/puzzlesAdmin";
 
 const app = new Hono();
 
