@@ -12,3 +12,4 @@ INSERT INTO puzzles (collection_id, title, date, status, icon_url, created_at, u
   (1, 'Daily Puzzle 3', '2025-01-03', 'draft', NULL, strftime('%s','now')*1000, strftime('%s','now')*1000);
 
 
+

@@ -44,7 +44,6 @@
    * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
    */
   // "services": [{ "binding": "MY_SERVICE", "service": "my-service" }]
-  ,
   /**
    * D1 Database binding
    * Update `database_id` after creating the DB: `wrangler d1 create crossword_admin_dev`

@@ -12,7 +12,7 @@ const app = new Hono();
 app.route("/api/admin/auth", adminAuth);
 app.route("/api/players/auth", playerAuth);
 app.route("/", openapi);
-app.route("/", docs);
+app.route("/api-docs", docs);
 app.route("/api/puzzles", puzzles);
 
 app.get("*", (c) => {

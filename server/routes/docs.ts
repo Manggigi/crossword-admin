@@ -1,20 +1,19 @@
 import { Hono } from "hono";
-import { serveStatic } from "hono/cloudflare-workers";
-import swaggerUiDist from "swagger-ui-dist";
 
 const router = new Hono();
 
-router.get("/api-docs", (c) => {
+// Serve Swagger UI via CDN to avoid Node-only modules in Cloudflare Workers
+router.get("/", (c) => {
   const html = `<!doctype html>
 <html>
   <head>
     <meta charset="utf-8" />
     <title>API Docs</title>
-    <link rel="stylesheet" href="/api-docs/swagger-ui.css" />
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
   </head>
   <body>
     <div id="swagger-ui"></div>
-    <script src="/api-docs/swagger-ui-bundle.js"></script>
+    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
     <script>
       window.ui = SwaggerUIBundle({
         url: '/openapi.json',
@@ -26,10 +25,7 @@ router.get("/api-docs", (c) => {
   return c.html(html);
 });
 
-// Serve swagger-ui assets
-router.get("/api-docs/swagger-ui.css", serveStatic({ path: `${swaggerUiDist.getAbsoluteFSPath()}/swagger-ui.css` }));
-router.get("/api-docs/swagger-ui-bundle.js", serveStatic({ path: `${swaggerUiDist.getAbsoluteFSPath()}/swagger-ui-bundle.js` }));
-
 export default router;
+
 
 

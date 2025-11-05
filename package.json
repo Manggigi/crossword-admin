@@ -43,6 +43,9 @@
     "vite-tsconfig-paths": "5.1.4",
     "wrangler": "4.21.x"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "build": "react-router build",
     "cf-typegen": "wrangler types",
